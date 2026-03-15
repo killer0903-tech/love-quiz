@@ -177,14 +177,16 @@ current++
 
 if(current < questions.length){
 
-setTimeout(loadQuestion,2000)
+setTimeout(function(){
+document.getElementById("result").innerHTML=""
+loadQuestion()
+},2000)
 
 }
 
-}
 else{
 
-if(score >=2){
+if(score >= 2){
 
 document.getElementById("result").innerHTML =
 "Quiz finished 😘❤️ You get a big kiss!"
@@ -203,7 +205,6 @@ document.getElementById("options").innerHTML=""
 }
 
 }
-
 </script>
 
 </body>
