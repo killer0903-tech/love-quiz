@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Quiz for My Love ❤️</title>
+
+<style>
+
+body{
+font-family: Arial;
+text-align:center;
+background: linear-gradient(#ff9a9e,#fad0c4);
+padding:20px;
+}
+
+.container{
+background:white;
+padding:25px;
+border-radius:15px;
+max-width:400px;
+margin:auto;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+button{
+display:block;
+width:100%;
+margin:8px 0;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#ff6b81;
+color:white;
+font-size:16px;
+}
+
+button:hover{
+background:#ff4757;
+}
+
+#result{
+font-size:20px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Study Quiz ❤️</h2>
+
+<p id="question"></p>
+
+<div id="options"></div>
+
+<h3 id="result"></h3>
+<h4 id="score">Score: 0 ❤️</h4>
+
+</div>
+
+<script>
+
+let questions = [
+
+{
+q:"What is the capital of India?",
+options:["Delhi","Mumbai","Chennai","Kolkata"],
+answer:"Delhi"
+},
+
+{
+q:"How many bones are in the human body?",
+options:["206","210","201","208"],
+answer:"206"
+},
+
+{
+q:"Which organ pumps blood?",
+options:["Lungs","Heart","Kidney","Brain"],
+answer:"Heart"
+}
+
+]
+
+let current = 0
+let score = 0
+
+loadQuestion()
+
+function loadQuestion(){
+
+let q = questions[current]
+
+document.getElementById("question").innerHTML = q.q
+
+let optionsHTML=""
+
+q.options.forEach(option => {
+
+optionsHTML += `<button onclick="checkAnswer('${option}')">${option}</button>`
+
+})
+
+document.getElementById("options").innerHTML = optionsHTML
+
+}
+
+function checkAnswer(answer){
+
+let correct = questions[current].answer
+
+if(answer == correct){
+
+score++
+
+document.getElementById("result").innerHTML =
+"Correct 😘❤️ I'm proud of you!"
+
+}
+
+else{
+
+document.getElementById("result").innerHTML =
+"Wrong answer but you can do it 💪❤️"
+
+}
+
+document.getElementById("score").innerHTML =
+"Score: "+score+" ❤️"
+
+current++
+
+if(current < questions.length){
+
+setTimeout(loadQuestion,1000)
+
+}
+
+else{
+
+if(score >=2){
+
+document.getElementById("result").innerHTML =
+"Quiz finished 😘❤️ You get a big kiss!"
+
+}
+
+else{
+
+document.getElementById("result").innerHTML =
+"Keep practicing ❤️ I believe in you!"
+
+}
+
+document.getElementById("options").innerHTML=""
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
