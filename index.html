@@ -3,9 +3,24 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Study Quiz for My Love ❤️</title>
-
+<div class="progress">
+<div id="progressBar"></div>
+</div>
 <style>
+.progress{
+width:100%;
+background:#eee;
+border-radius:10px;
+margin:10px 0;
+height:10px;
+}
 
+#progressBar{
+height:10px;
+background:#ff6b81;
+width:0%;
+border-radius:10px;
+}
 body{
 font-family: Arial;
 text-align:center;
@@ -75,7 +90,7 @@ opacity:0;
 
 <h3 id="result"></h3>
 <h4 id="score">Score: 0 ❤️</h4>
-
+<h4 id="timer">Time: 10s</h4>
 </div>
 
 <script>
@@ -146,12 +161,17 @@ answer:"Insulin"
 
 let current = 0
 let score = 0
+let time = 10
+let timer
 
 loadQuestion()
 
 function loadQuestion(){
 
 let q = questions[current]
+
+let progress = ((current+1)/questions.length)*100
+document.getElementById("progressBar").style.width = progress + "%"
 
 document.getElementById("question").innerHTML = q.q
 
@@ -164,6 +184,9 @@ optionsHTML += `<button onclick="checkAnswer('${option}')">${option}</button>`
 })
 
 document.getElementById("options").innerHTML = optionsHTML
+
+clearInterval(timer)
+startTimer()
 
 }
 
@@ -249,6 +272,32 @@ document.body.appendChild(heart)
 setTimeout(function(){
 heart.remove()
 },3000)
+
+}function startTimer(){
+
+time = 10
+
+timer = setInterval(function(){
+
+document.getElementById("timer").innerHTML =
+"Time: " + time + "s"
+
+time--
+
+if(time < 0){
+
+clearInterval(timer)
+
+document.getElementById("result").innerHTML =
+"Time up ⏱"
+
+current++
+
+loadQuestion()
+
+}
+
+},1000)
 
 }
 </script>
