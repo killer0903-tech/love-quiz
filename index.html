@@ -101,8 +101,6 @@ opacity:0;
 
 <body>
 
-<!-- Welcome Screen -->
-
 <div id="welcomeScreen" class="welcome">
 <h1>Welcome ❤️</h1>
 <p>This quiz is made for you to practice and succeed in your exam 🌟</p>
@@ -111,8 +109,6 @@ opacity:0;
 Start Quiz ❤️
 </button>
 </div>
-
-<!-- Quiz Box -->
 
 <div class="container" id="quizBox" style="display:none;">
 
@@ -134,8 +130,6 @@ Start Quiz ❤️
 
 </div>
 
-<!-- Final Screen -->
-
 <div id="finalScreen" style="display:none; text-align:center; margin-top:120px;">
 <h1>Congratulations ❤️</h1>
 <p id="finalMessage"></p>
@@ -146,67 +140,220 @@ Start Quiz ❤️
 
 let questions = [
 
-{
-q:"Which enzyme digests proteins in the stomach?",
+{ q:"Which enzyme digests proteins in the stomach?",
 options:["Trypsin","Pepsin","Chymotrypsin","Carboxypeptidase"],
-answer:"Pepsin"
-},
+answer:"Pepsin" },
 
-{
-q:"Which hormone stimulates pancreatic juice secretion?",
+{ q:"Which hormone stimulates pancreatic juice secretion?",
 options:["Gastrin","Secretin","Insulin","Adrenaline"],
-answer:"Secretin"
-},
+answer:"Secretin" },
 
-{
-q:"Oxygen is transported in blood mainly as:",
+{ q:"Oxygen is transported in blood mainly as:",
 options:["Oxyhemoglobin","Dissolved oxygen","Carbaminohemoglobin","Carbonic acid"],
-answer:"Oxyhemoglobin"
-},
+answer:"Oxyhemoglobin" },
 
-{
-q:"Respiratory center of the brain:",
+{ q:"Respiratory center of the brain:",
 options:["Cerebellum","Medulla oblongata","Hypothalamus","Cerebrum"],
-answer:"Medulla oblongata"
-},
+answer:"Medulla oblongata" },
 
-{
-q:"Pacemaker of the human heart:",
+{ q:"Pacemaker of the human heart:",
 options:["AV node","SA node","Purkinje fibers","Bundle of His"],
-answer:"SA node"
-},
+answer:"SA node" },
 
-{
-q:"Which vessel carries oxygenated blood from lungs to heart?",
+{ q:"Which vessel carries oxygenated blood from lungs to heart?",
 options:["Pulmonary artery","Pulmonary vein","Aorta","Vena cava"],
-answer:"Pulmonary vein"
-},
+answer:"Pulmonary vein" },
 
-{
-q:"Filtration of blood in kidney occurs in:",
+{ q:"Filtration of blood in kidney occurs in:",
 options:["Loop of Henle","Glomerulus","Collecting duct","Distal tubule"],
-answer:"Glomerulus"
-},
+answer:"Glomerulus" },
 
-{
-q:"Counter current mechanism helps in:",
+{ q:"Counter current mechanism helps in:",
 options:["Formation of urine","Concentration of urine","Filtration of blood","Absorption of glucose"],
-answer:"Concentration of urine"
-},
+answer:"Concentration of urine" },
 
-{
-q:"Brain part responsible for balance:",
+{ q:"Brain part responsible for balance:",
 options:["Cerebrum","Cerebellum","Medulla","Thalamus"],
-answer:"Cerebellum"
-},
+answer:"Cerebellum" },
 
-{
-q:"Hormone regulating blood sugar:",
+{ q:"Hormone regulating blood sugar:",
 options:["Thyroxine","Insulin","Adrenaline","Cortisol"],
-answer:"Insulin"
-}
+answer:"Insulin" },
+
+{ q:"The enzyme present in gastric juice that digests proteins is:",
+options:["Pepsin","Trypsin","Lipase","Amylase"],
+answer:"Pepsin" },
+
+{ q:"Bile juice is secreted by:",
+options:["Pancreas","Liver","Gall bladder","Stomach"],
+answer:"Liver" },
+
+{ q:"Absorption of most nutrients occurs in:",
+options:["Stomach","Small intestine","Large intestine","Rectum"],
+answer:"Small intestine" },
+
+{ q:"The enzyme that digests fats is:",
+options:["Lipase","Amylase","Pepsin","Maltase"],
+answer:"Lipase" },
+
+{ q:"Vitamin B12 absorption occurs in:",
+options:["Stomach","Ileum","Jejunum","Colon"],
+answer:"Ileum" },
+
+{ q:"The acidic pH of stomach is due to:",
+options:["HCl","Bile salts","Sodium bicarbonate","Enzymes"],
+answer:"HCl" },
+
+{ q:"The hormone that stimulates gastric secretion is:",
+options:["Gastrin","Secretin","Insulin","Glucagon"],
+answer:"Gastrin" },
+
+{ q:"Respiratory pigment in humans is:",
+options:["Myoglobin","Hemoglobin","Chlorophyll","Cytochrome"],
+answer:"Hemoglobin" },
+
+{ q:"The respiratory center is located in:",
+options:["Cerebrum","Medulla oblongata","Cerebellum","Hypothalamus"],
+answer:"Medulla oblongata" },
+
+{ q:"Exchange of gases in lungs occurs in:",
+options:["Bronchi","Trachea","Alveoli","Bronchioles"],
+answer:"Alveoli" },
+
+{ q:"Normal breathing rate of an adult is:",
+options:["6–8/min","12–16/min","20–30/min","30–40/min"],
+answer:"12–16/min" },
+
+{ q:"Carbon dioxide is transported mainly as:",
+options:["Carbaminohemoglobin","Dissolved CO2","Bicarbonate ions","Carbonic acid"],
+answer:"Bicarbonate ions" },
+
+{ q:"Normal blood pressure is:",
+options:["80/120 mm Hg","120/80 mm Hg","140/90 mm Hg","90/60 mm Hg"],
+answer:"120/80 mm Hg" },
+
+{ q:"The largest artery is:",
+options:["Pulmonary artery","Aorta","Vena cava","Coronary artery"],
+answer:"Aorta" },
+
+{ q:"RBCs are produced in:",
+options:["Liver","Bone marrow","Spleen","Kidneys"],
+answer:"Bone marrow" },
+
+{ q:"The life span of RBC is about:",
+options:["60 days","90 days","120 days","180 days"],
+answer:"120 days" },
+
+{ q:"Blood clotting requires:",
+options:["Calcium ions","Potassium ions","Sodium ions","Chloride ions"],
+answer:"Calcium ions" },
+
+{ q:"Functional unit of kidney is:",
+options:["Neuron","Nephron","Alveoli","Glomerulus"],
+answer:"Nephron" },
+
+{ q:"Urine formation includes:",
+options:["Filtration","Reabsorption","Secretion","All of these"],
+answer:"All of these" },
+
+{ q:"Hormone controlling water reabsorption:",
+options:["Insulin","ADH","Thyroxine","Cortisol"],
+answer:"ADH" },
+
+{ q:"Longest nerve in human body:",
+options:["Vagus nerve","Sciatic nerve","Optic nerve","Facial nerve"],
+answer:"Sciatic nerve" },
+
+{ q:"Functional unit of nervous system:",
+options:["Axon","Dendrite","Neuron","Synapse"],
+answer:"Neuron" },
+
+{ q:"Reflex actions are controlled by:",
+options:["Brain","Spinal cord","Cerebellum","Hypothalamus"],
+answer:"Spinal cord" },
+
+{ q:"The gap between two neurons is called:",
+options:["Synapse","Axon","Node","Junction"],
+answer:"Synapse" },
+
+{ q:"Master gland of endocrine system:",
+options:["Thyroid","Pituitary","Adrenal","Pancreas"],
+answer:"Pituitary" },
+
+{ q:"Insulin is secreted by:",
+options:["Thyroid","Pancreas","Liver","Adrenal gland"],
+answer:"Pancreas" },
+
+{ q:"Hormone responsible for fight-or-flight response:",
+options:["Thyroxine","Adrenaline","Insulin","Glucagon"],
+answer:"Adrenaline" },
+
+{ q:"Thyroxine contains which element:",
+options:["Iron","Iodine","Calcium","Phosphorus"],
+answer:"Iodine" },
+
+{ q:"Basic unit of muscle contraction:",
+options:["Sarcomere","Myosin","Actin","Fiber"],
+answer:"Sarcomere" },
+
+{ q:"Bones are connected by:",
+options:["Tendons","Ligaments","Muscles","Cartilage"],
+answer:"Ligaments" },
+
+{ q:"Muscle attached to bone by:",
+options:["Ligament","Tendon","Cartilage","Nerve"],
+answer:"Tendon" },
+
+{ q:"Human skeleton has:",
+options:["206 bones","208 bones","210 bones","200 bones"],
+answer:"206 bones" },
+
+{ q:"Light sensitive cells of retina:",
+options:["Rods and cones","Neurons","Axons","Synapses"],
+answer:"Rods and cones" },
+
+{ q:"Vitamin important for vision:",
+options:["Vitamin A","Vitamin B","Vitamin C","Vitamin D"],
+answer:"Vitamin A" },
+
+{ q:"Cochlea is part of:",
+options:["Eye","Ear","Nose","Brain"],
+answer:"Ear" },
+
+{ q:"Plasma protein responsible for immunity:",
+options:["Albumin","Globulin","Fibrinogen","Hemoglobin"],
+answer:"Globulin" },
+
+{ q:"Universal donor blood group:",
+options:["A","B","AB","O"],
+answer:"O" },
+
+{ q:"Universal recipient blood group:",
+options:["A","B","AB","O"],
+answer:"AB" },
+
+{ q:"Platelets help in:",
+options:["Oxygen transport","Immunity","Blood clotting","Digestion"],
+answer:"Blood clotting" },
+
+{ q:"Hormone controlling metabolism:",
+options:["Thyroxine","Insulin","Adrenaline","Cortisol"],
+answer:"Thyroxine" },
+
+{ q:"The diaphragm helps in:",
+options:["Digestion","Respiration","Circulation","Excretion"],
+answer:"Respiration" },
+
+{ q:"Myoglobin is present in:",
+options:["Blood","Muscle","Bone","Nerve"],
+answer:"Muscle" },
+
+{ q:"The functional unit of muscle fiber is:",
+options:["Sarcomere","Myofibril","Actin","Myosin"],
+answer:"Sarcomere" }
 
 ]
+
 
 let current = 0
 let score = 0
