@@ -74,13 +74,38 @@ transform:translateY(100vh);
 opacity:0;
 }
 }
+.welcome{
+text-align:center;
+margin-top:120px;
+}
 
+.startBtn{
+padding:15px 30px;
+font-size:18px;
+background:#ff6b81;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+}
+
+.startBtn:hover{
+background:#ff4757;
+}
 </style>
 </head>
 
 <body>
+  <div id="welcomeScreen" class="welcome">
+<h1>Welcome ❤️</h1>
+<p>This quiz is made for you to practice and succeed in your exam 🌟</p>
 
-<div class="container">
+<button onclick="startQuiz()" class="startBtn">
+Start Quiz ❤️
+</button>
+</div>
+
+<div class="container" id="quizBox" style="display:none;">
 
 <h2>Study Quiz ❤️</h2>
 
@@ -94,6 +119,13 @@ opacity:0;
 </div>
 
 <script>
+  function startQuiz(){
+
+document.getElementById("welcomeScreen").style.display="none"
+
+document.getElementById("quizBox").style.display="block"
+
+}
 
 let questions = [
 
