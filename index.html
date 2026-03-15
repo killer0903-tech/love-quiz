@@ -159,14 +159,14 @@ if(answer == correct){
 score++
 
 document.getElementById("result").innerHTML =
-"Correct 😘❤️ I'm proud of you!"
+"Correct 😘❤️ Proud of you!"
 
 }
 
 else{
 
 document.getElementById("result").innerHTML =
-"Wrong answer but you can do it 💪❤️"
+"Wrong ❌ Correct answer is: " + correct + " 💡 You can do it!"
 
 }
 
@@ -177,10 +177,11 @@ current++
 
 if(current < questions.length){
 
-setTimeout(loadQuestion,1000)
+setTimeout(loadQuestion,2000)
 
 }
 
+}
 else{
 
 if(score >=2){
