@@ -154,55 +154,62 @@ function checkAnswer(answer){
 
 let correct = questions[current].answer
 
-if(answer == correct){
+let message=""
+
+if(answer === correct){
 
 score++
-
-document.getElementById("result").innerHTML =
-"Correct 😘❤️ Proud of you!"
+message = "Correct 😘❤️ Proud of you!"
 
 }
 
 else{
 
-document.getElementById("result").innerHTML =
-"Wrong ❌ Correct answer is: " + correct + " 💡 You can do it!"
+message = "Wrong ❌ Correct answer is: " + correct + " 💡 You can do it!"
 
 }
+
+document.getElementById("result").innerHTML = message
 
 document.getElementById("score").innerHTML =
 "Score: "+score+" ❤️"
 
+/* disable buttons after answering */
+let buttons = document.querySelectorAll("#options button")
+buttons.forEach(btn => btn.disabled = true)
+
 current++
+
+setTimeout(function(){
+
+document.getElementById("result").innerHTML=""
 
 if(current < questions.length){
 
-setTimeout(function(){
-document.getElementById("result").innerHTML=""
 loadQuestion()
-},2000)
 
 }
-
 else{
 
-if(score >= 2){
+document.getElementById("question").innerHTML = "Quiz Finished 🎉"
+
+if(score >= 5){
 
 document.getElementById("result").innerHTML =
-"Quiz finished 😘❤️ You get a big kiss!"
+"You did amazing 😘❤️"
 
-}
-
-else{
+}else{
 
 document.getElementById("result").innerHTML =
-"Keep practicing ❤️ I believe in you!"
+"Keep practicing ❤️"
 
 }
 
 document.getElementById("options").innerHTML=""
 
 }
+
+},3000)
 
 }
 </script>
