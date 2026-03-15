@@ -3,24 +3,9 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Study Quiz for My Love ❤️</title>
-<div class="progress">
-<div id="progressBar"></div>
-</div>
-<style>
-.progress{
-width:100%;
-background:#eee;
-border-radius:10px;
-margin:10px 0;
-height:10px;
-}
 
-#progressBar{
-height:10px;
-background:#ff6b81;
-width:0%;
-border-radius:10px;
-}
+<style>
+
 body{
 font-family: Arial;
 text-align:center;
@@ -37,6 +22,21 @@ margin:auto;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
+.progress{
+width:100%;
+background:#eee;
+border-radius:10px;
+margin:10px 0;
+height:10px;
+}
+
+#progressBar{
+height:10px;
+background:#ff6b81;
+width:0%;
+border-radius:10px;
+}
+
 button{
 display:block;
 width:100%;
@@ -47,6 +47,7 @@ border-radius:8px;
 background:#ff6b81;
 color:white;
 font-size:16px;
+cursor:pointer;
 }
 
 button:hover{
@@ -57,23 +58,7 @@ background:#ff4757;
 font-size:20px;
 margin-top:10px;
 }
-  .heart{
-position:fixed;
-top:-10px;
-font-size:24px;
-animation:fall 3s linear forwards;
-}
 
-@keyframes fall{
-0%{
-transform:translateY(0);
-opacity:1;
-}
-100%{
-transform:translateY(100vh);
-opacity:0;
-}
-}
 .welcome{
 text-align:center;
 margin-top:120px;
@@ -92,11 +77,33 @@ cursor:pointer;
 .startBtn:hover{
 background:#ff4757;
 }
+
+.heart{
+position:fixed;
+top:-10px;
+font-size:24px;
+animation:fall 3s linear forwards;
+}
+
+@keyframes fall{
+0%{
+transform:translateY(0);
+opacity:1;
+}
+100%{
+transform:translateY(100vh);
+opacity:0;
+}
+}
+
 </style>
 </head>
 
 <body>
-  <div id="welcomeScreen" class="welcome">
+
+<!-- Welcome Screen -->
+
+<div id="welcomeScreen" class="welcome">
 <h1>Welcome ❤️</h1>
 <p>This quiz is made for you to practice and succeed in your exam 🌟</p>
 
@@ -105,86 +112,96 @@ Start Quiz ❤️
 </button>
 </div>
 
+<!-- Quiz Box -->
+
 <div class="container" id="quizBox" style="display:none;">
 
 <h2>Study Quiz ❤️</h2>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
 
 <p id="question"></p>
 
 <div id="options"></div>
 
 <h3 id="result"></h3>
+
 <h4 id="score">Score: 0 ❤️</h4>
+
 <h4 id="timer">Time: 10s</h4>
+
+</div>
+
+<!-- Final Screen -->
+
+<div id="finalScreen" style="display:none; text-align:center; margin-top:120px;">
+<h1>Congratulations ❤️</h1>
+<p id="finalMessage"></p>
+<h2>😘 You did amazing!</h2>
 </div>
 
 <script>
-  function startQuiz(){
-
-document.getElementById("welcomeScreen").style.display="none"
-
-document.getElementById("quizBox").style.display="block"
-
-}
 
 let questions = [
 
 {
-q:"Which enzyme is responsible for the digestion of proteins in the stomach? (NEET 2020)",
+q:"Which enzyme digests proteins in the stomach?",
 options:["Trypsin","Pepsin","Chymotrypsin","Carboxypeptidase"],
 answer:"Pepsin"
 },
 
 {
-q:"The hormone that stimulates the secretion of pancreatic juice is: (NEET 2019)",
+q:"Which hormone stimulates pancreatic juice secretion?",
 options:["Gastrin","Secretin","Insulin","Adrenaline"],
 answer:"Secretin"
 },
 
 {
-q:"Oxygen is transported in human blood mainly as: (NEET 2021)",
+q:"Oxygen is transported in blood mainly as:",
 options:["Oxyhemoglobin","Dissolved oxygen","Carbaminohemoglobin","Carbonic acid"],
 answer:"Oxyhemoglobin"
 },
 
 {
-q:"Which of the following is the respiratory center in the brain? (NEET 2018)",
+q:"Respiratory center of the brain:",
 options:["Cerebellum","Medulla oblongata","Hypothalamus","Cerebrum"],
 answer:"Medulla oblongata"
 },
 
 {
-q:"The pacemaker of the human heart is: (NEET 2020)",
+q:"Pacemaker of the human heart:",
 options:["AV node","SA node","Purkinje fibers","Bundle of His"],
 answer:"SA node"
 },
 
 {
-q:"Which blood vessel carries oxygenated blood from lungs to heart? (NEET 2017)",
+q:"Which vessel carries oxygenated blood from lungs to heart?",
 options:["Pulmonary artery","Pulmonary vein","Aorta","Vena cava"],
 answer:"Pulmonary vein"
 },
 
 {
-q:"The filtration of blood in the kidney occurs in: (NEET 2019)",
+q:"Filtration of blood in kidney occurs in:",
 options:["Loop of Henle","Glomerulus","Collecting duct","Distal tubule"],
 answer:"Glomerulus"
 },
 
 {
-q:"The counter current mechanism in kidneys helps in: (NEET 2018)",
+q:"Counter current mechanism helps in:",
 options:["Formation of urine","Concentration of urine","Filtration of blood","Absorption of glucose"],
 answer:"Concentration of urine"
 },
 
 {
-q:"The part of the brain responsible for maintaining posture and balance is: (NEET 2021)",
+q:"Brain part responsible for balance:",
 options:["Cerebrum","Cerebellum","Medulla","Thalamus"],
 answer:"Cerebellum"
 },
 
 {
-q:"Which hormone regulates blood sugar level? (NEET 2017)",
+q:"Hormone regulating blood sugar:",
 options:["Thyroxine","Insulin","Adrenaline","Cortisol"],
 answer:"Insulin"
 }
@@ -196,7 +213,15 @@ let score = 0
 let time = 10
 let timer
 
+function startQuiz(){
+
+document.getElementById("welcomeScreen").style.display="none"
+
+document.getElementById("quizBox").style.display="block"
+
 loadQuestion()
+
+}
 
 function loadQuestion(){
 
@@ -226,32 +251,28 @@ function checkAnswer(answer){
 
 let correct = questions[current].answer
 
-let message=""
-
 if(answer === correct){
 
 score++
-message = "Correct 😘❤️ Proud of you!"
 
-/* trigger heart animation */
+document.getElementById("result").innerHTML =
+"Correct 😘❤️ Proud of you!"
+
 for(let i=0;i<10;i++){
 createHeart()
 }
 
 }
-
 else{
 
-message = "Wrong ❌ Correct answer is: " + correct + " 💡 You can do it!"
+document.getElementById("result").innerHTML =
+"Wrong ❌ Correct answer is: " + correct
 
 }
-
-document.getElementById("result").innerHTML = message
 
 document.getElementById("score").innerHTML =
 "Score: "+score+" ❤️"
 
-/* disable buttons after answering */
 let buttons = document.querySelectorAll("#options button")
 buttons.forEach(btn => btn.disabled = true)
 
@@ -268,28 +289,49 @@ loadQuestion()
 }
 else{
 
-document.getElementById("question").innerHTML = "Quiz Finished 🎉"
+document.getElementById("quizBox").style.display="none"
 
-if(score >= 5){
+document.getElementById("finalScreen").style.display="block"
 
-document.getElementById("result").innerHTML =
-"You did amazing 😘❤️"
+document.getElementById("finalMessage").innerHTML =
+"Your score is "+score+" ❤️ out of "+questions.length
 
-}else{
-
-document.getElementById("result").innerHTML =
-"Keep practicing ❤️"
+for(let i=0;i<30;i++){
+createHeart()
+}
 
 }
 
-document.getElementById("options").innerHTML=""
+},2000)
 
 }
 
-},3000)
+function startTimer(){
+
+time = 10
+
+timer = setInterval(function(){
+
+document.getElementById("timer").innerHTML =
+"Time: "+time+"s"
+
+time--
+
+if(time < 0){
+
+clearInterval(timer)
+
+current++
+
+loadQuestion()
 
 }
-  function createHeart(){
+
+},1000)
+
+}
+
+function createHeart(){
 
 let heart = document.createElement("div")
 
@@ -305,33 +347,8 @@ setTimeout(function(){
 heart.remove()
 },3000)
 
-}function startTimer(){
-
-time = 10
-
-timer = setInterval(function(){
-
-document.getElementById("timer").innerHTML =
-"Time: " + time + "s"
-
-time--
-
-if(time < 0){
-
-clearInterval(timer)
-
-document.getElementById("result").innerHTML =
-"Time up ⏱"
-
-current++
-
-loadQuestion()
-
 }
 
-},1000)
-
-}
 </script>
 
 </body>
