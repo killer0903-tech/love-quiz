@@ -7,9 +7,9 @@
 <style>
 
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
-background: linear-gradient(#ff9a9e,#fad0c4);
+background:linear-gradient(#ff9a9e,#fad0c4);
 padding:20px;
 }
 
@@ -54,11 +54,6 @@ button:hover{
 background:#ff4757;
 }
 
-#result{
-font-size:20px;
-margin-top:10px;
-}
-
 .welcome{
 text-align:center;
 margin-top:120px;
@@ -74,10 +69,6 @@ color:white;
 cursor:pointer;
 }
 
-.startBtn:hover{
-background:#ff4757;
-}
-
 .heart{
 position:fixed;
 top:-10px;
@@ -86,16 +77,47 @@ animation:fall 3s linear forwards;
 }
 
 @keyframes fall{
-0%{
-transform:translateY(0);
-opacity:1;
-}
-100%{
-transform:translateY(100vh);
-opacity:0;
-}
+0%{transform:translateY(0);opacity:1;}
+100%{transform:translateY(100vh);opacity:0;}
 }
 
+.confetti{
+position:fixed;
+top:-10px;
+width:10px;
+height:10px;
+animation:confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall{
+0%{transform:translateY(0) rotate(0deg);opacity:1;}
+100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+#navPanel{
+display:grid;
+grid-template-columns:repeat(10,1fr);
+gap:5px;
+margin:15px 0;
+}
+
+.navBtn{
+padding:6px;
+font-size:12px;
+background:#ddd;
+border-radius:5px;
+border:none;
+cursor:pointer;
+}
+
+.navBtn.current{
+background:#ff6b81;
+color:white;
+}
+
+.navBtn.answered{
+background:#2ed573;
+color:white;
+}
 </style>
 </head>
 
@@ -103,11 +125,15 @@ opacity:0;
 
 <div id="welcomeScreen" class="welcome">
 <h1>Welcome ❤️</h1>
-<p>This quiz is made for you to practice and succeed in your exam 🌟</p>
 
-<button onclick="startQuiz()" class="startBtn">
-Start Quiz ❤️
-</button>
+<p>
+You have <b>60 questions</b>.<br>
+Score <b>55 or more</b> to unlock your surprise gift 🎁
+</p>
+
+<p>I believe in you. Good luck! 🌟</p>
+
+<button onclick="startQuiz()" class="startBtn">Start Quiz ❤️</button>
 </div>
 
 <div class="container" id="quizBox" style="display:none;">
@@ -117,7 +143,8 @@ Start Quiz ❤️
 <div class="progress">
 <div id="progressBar"></div>
 </div>
-
+<div id="navPanel"></div>
+<h4 id="questionNumber"></h4>
 <p id="question"></p>
 
 <div id="options"></div>
@@ -126,246 +153,401 @@ Start Quiz ❤️
 
 <h4 id="score">Score: 0 ❤️</h4>
 
-<h4 id="timer">Time: 10s</h4>
+<h4 id="timer">Time: 20s</h4>
 
 </div>
 
 <div id="finalScreen" style="display:none; text-align:center; margin-top:120px;">
-<h1>Congratulations ❤️</h1>
+
+<h1>Quiz Finished ❤️</h1>
+
 <p id="finalMessage"></p>
-<h2>😘 You did amazing!</h2>
+
+<div id="giftBox" style="font-size:80px;margin:20px;">
+🔒🎁
 </div>
+
+<h2 id="giftMessage"></h2>
+
+</div>
+
+<audio id="correctSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+<audio id="giftSound" src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg"></audio>
 
 <script>
 
 let questions = [
+{
+q:"The correct sequence of taxonomic hierarchy is:",
+options:["Kingdom → Class → Order → Phylum → Family","Kingdom → Phylum → Class → Order → Family → Genus → Species","Kingdom → Order → Phylum → Class","Species → Genus → Family → Kingdom"],
+answer:"Kingdom → Phylum → Class → Order → Family → Genus → Species"
+},
 
-{ q:"Which enzyme digests proteins in the stomach?",
-options:["Trypsin","Pepsin","Chymotrypsin","Carboxypeptidase"],
-answer:"Pepsin" },
+{
+q:"The five-kingdom classification was proposed by:",
+options:["Carl Linnaeus","R.H. Whittaker","Ernst Haeckel","Bentham & Hooker"],
+answer:"R.H. Whittaker"
+},
 
-{ q:"Which hormone stimulates pancreatic juice secretion?",
-options:["Gastrin","Secretin","Insulin","Adrenaline"],
-answer:"Secretin" },
+{
+q:"Lichens represent:",
+options:["Symbiosis between algae and fungi","Symbiosis between bacteria and fungi","Parasitic association","Symbiosis between algae and bryophytes"],
+answer:"Symbiosis between algae and fungi"
+},
 
-{ q:"Oxygen is transported in blood mainly as:",
-options:["Oxyhemoglobin","Dissolved oxygen","Carbaminohemoglobin","Carbonic acid"],
-answer:"Oxyhemoglobin" },
+{
+q:"Which kingdom includes organisms with chitin cell walls?",
+options:["Monera","Protista","Fungi","Plantae"],
+answer:"Fungi"
+},
 
-{ q:"Respiratory center of the brain:",
-options:["Cerebellum","Medulla oblongata","Hypothalamus","Cerebrum"],
-answer:"Medulla oblongata" },
+{
+q:"Viruses differ from living organisms because they:",
+options:["Contain nucleic acids","Can reproduce","Lack cellular structure","Contain proteins"],
+answer:"Lack cellular structure"
+},
 
-{ q:"Pacemaker of the human heart:",
-options:["AV node","SA node","Purkinje fibers","Bundle of His"],
-answer:"SA node" },
+{
+q:"The arrangement of vascular bundles in dicot stem is:",
+options:["Scattered","Ring","Radial","Collateral closed"],
+answer:"Ring"
+},
 
-{ q:"Which vessel carries oxygenated blood from lungs to heart?",
-options:["Pulmonary artery","Pulmonary vein","Aorta","Vena cava"],
-answer:"Pulmonary vein" },
+{
+q:"Which tissue is responsible for secondary growth in plants?",
+options:["Apical meristem","Intercalary meristem","Lateral meristem","Parenchyma"],
+answer:"Lateral meristem"
+},
 
-{ q:"Filtration of blood in kidney occurs in:",
-options:["Loop of Henle","Glomerulus","Collecting duct","Distal tubule"],
-answer:"Glomerulus" },
+{
+q:"The fruit develops from:",
+options:["Ovary","Ovule","Embryo sac","Endosperm"],
+answer:"Ovary"
+},
 
-{ q:"Counter current mechanism helps in:",
-options:["Formation of urine","Concentration of urine","Filtration of blood","Absorption of glucose"],
-answer:"Concentration of urine" },
+{
+q:"The exoskeleton of insects is made of:",
+options:["Cellulose","Keratin","Chitin","Collagen"],
+answer:"Chitin"
+},
 
-{ q:"Brain part responsible for balance:",
-options:["Cerebrum","Cerebellum","Medulla","Thalamus"],
-answer:"Cerebellum" },
+{
+q:"The functional unit of nervous tissue is:",
+options:["Axon","Neuron","Synapse","Dendrite"],
+answer:"Neuron"
+},
 
-{ q:"Hormone regulating blood sugar:",
-options:["Thyroxine","Insulin","Adrenaline","Cortisol"],
-answer:"Insulin" },
+{
+q:"The fluid mosaic model of plasma membrane was proposed by:",
+options:["Watson & Crick","Singer & Nicolson","Robertson","Schleiden"],
+answer:"Singer & Nicolson"
+},
 
-{ q:"The enzyme present in gastric juice that digests proteins is:",
-options:["Pepsin","Trypsin","Lipase","Amylase"],
-answer:"Pepsin" },
+{
+q:"Which organelle is known as the powerhouse of the cell?",
+options:["Golgi body","Mitochondria","Lysosome","Ribosome"],
+answer:"Mitochondria"
+},
 
-{ q:"Bile juice is secreted by:",
-options:["Pancreas","Liver","Gall bladder","Stomach"],
-answer:"Liver" },
+{
+q:"The site of protein synthesis is:",
+options:["Lysosome","Ribosome","Golgi apparatus","Vacuole"],
+answer:"Ribosome"
+},
 
-{ q:"Absorption of most nutrients occurs in:",
-options:["Stomach","Small intestine","Large intestine","Rectum"],
-answer:"Small intestine" },
+{
+q:"Crossing over occurs during which stage of meiosis?",
+options:["Prophase I","Metaphase I","Anaphase I","Telophase I"],
+answer:"Prophase I"
+},
 
-{ q:"The enzyme that digests fats is:",
-options:["Lipase","Amylase","Pepsin","Maltase"],
-answer:"Lipase" },
+{
+q:"The number of chromosomes in human gametes is:",
+options:["23","46","44","22"],
+answer:"23"
+},
 
-{ q:"Vitamin B12 absorption occurs in:",
-options:["Stomach","Ileum","Jejunum","Colon"],
-answer:"Ileum" },
+{
+q:"The primary CO₂ acceptor in C₄ plants is:",
+options:["RuBP","PEP","OAA","PGA"],
+answer:"PEP"
+},
 
-{ q:"The acidic pH of stomach is due to:",
-options:["HCl","Bile salts","Sodium bicarbonate","Enzymes"],
-answer:"HCl" },
+{
+q:"Photorespiration occurs in:",
+options:["C3 plants","C4 plants","CAM plants","Algae"],
+answer:"C3 plants"
+},
 
-{ q:"The hormone that stimulates gastric secretion is:",
-options:["Gastrin","Secretin","Insulin","Glucagon"],
-answer:"Gastrin" },
+{
+q:"The enzyme involved in CO₂ fixation in Calvin cycle is:",
+options:["RuBisCO","ATP synthase","NADH dehydrogenase","PEP carboxylase"],
+answer:"RuBisCO"
+},
 
-{ q:"Respiratory pigment in humans is:",
-options:["Myoglobin","Hemoglobin","Chlorophyll","Cytochrome"],
-answer:"Hemoglobin" },
+{
+q:"Glycolysis occurs in:",
+options:["Mitochondria","Cytoplasm","Chloroplast","Nucleus"],
+answer:"Cytoplasm"
+},
 
-{ q:"The respiratory center is located in:",
-options:["Cerebrum","Medulla oblongata","Cerebellum","Hypothalamus"],
-answer:"Medulla oblongata" },
+{
+q:"Ethylene is responsible for:",
+options:["Seed dormancy","Fruit ripening","Root growth","Cell division"],
+answer:"Fruit ripening"
+},
 
-{ q:"Exchange of gases in lungs occurs in:",
-options:["Bronchi","Trachea","Alveoli","Bronchioles"],
-answer:"Alveoli" },
+{
+q:"Oxygen binds to hemoglobin in:",
+options:["Tissues","Lungs","Heart","Kidneys"],
+answer:"Lungs"
+},
 
-{ q:"Normal breathing rate of an adult is:",
-options:["6–8/min","12–16/min","20–30/min","30–40/min"],
-answer:"12–16/min" },
+{
+q:"The pacemaker of the heart is:",
+options:["AV node","SA node","Bundle of His","Purkinje fibers"],
+answer:"SA node"
+},
 
-{ q:"Carbon dioxide is transported mainly as:",
-options:["Carbaminohemoglobin","Dissolved CO2","Bicarbonate ions","Carbonic acid"],
-answer:"Bicarbonate ions" },
+{
+q:"The functional unit of kidney is:",
+options:["Neuron","Nephron","Glomerulus","Loop of Henle"],
+answer:"Nephron"
+},
 
-{ q:"Normal blood pressure is:",
-options:["80/120 mm Hg","120/80 mm Hg","140/90 mm Hg","90/60 mm Hg"],
-answer:"120/80 mm Hg" },
+{
+q:"ADH hormone controls:",
+options:["Blood pressure","Water reabsorption","Heart rate","Glucose level"],
+answer:"Water reabsorption"
+},
 
-{ q:"The largest artery is:",
-options:["Pulmonary artery","Aorta","Vena cava","Coronary artery"],
-answer:"Aorta" },
+{
+q:"The hormone responsible for fight-or-flight response is:",
+options:["Insulin","Adrenaline","Thyroxine","Cortisol"],
+answer:"Adrenaline"
+},
 
-{ q:"RBCs are produced in:",
-options:["Liver","Bone marrow","Spleen","Kidneys"],
-answer:"Bone marrow" },
+{
+q:"Double fertilization occurs in:",
+options:["Gymnosperms","Angiosperms","Bryophytes","Pteridophytes"],
+answer:"Angiosperms"
+},
 
-{ q:"The life span of RBC is about:",
-options:["60 days","90 days","120 days","180 days"],
-answer:"120 days" },
+{
+q:"Male gametophyte in flowering plants is:",
+options:["Ovule","Pollen grain","Embryo","Endosperm"],
+answer:"Pollen grain"
+},
 
-{ q:"Blood clotting requires:",
-options:["Calcium ions","Potassium ions","Sodium ions","Chloride ions"],
-answer:"Calcium ions" },
+{
+q:"The site of fertilization in humans is:",
+options:["Uterus","Ovary","Fallopian tube","Cervix"],
+answer:"Fallopian tube"
+},
 
-{ q:"Functional unit of kidney is:",
-options:["Neuron","Nephron","Alveoli","Glomerulus"],
-answer:"Nephron" },
+{
+q:"IVF stands for:",
+options:["Internal fertilization","In vitro fertilization","In vivo fertilization","Artificial fertilization"],
+answer:"In vitro fertilization"
+},
 
-{ q:"Urine formation includes:",
-options:["Filtration","Reabsorption","Secretion","All of these"],
-answer:"All of these" },
+{
+q:"The hormone responsible for milk secretion is:",
+options:["Oxytocin","Prolactin","Estrogen","Progesterone"],
+answer:"Prolactin"
+},
 
-{ q:"Hormone controlling water reabsorption:",
-options:["Insulin","ADH","Thyroxine","Cortisol"],
-answer:"ADH" },
+{
+q:"The law of segregation was proposed by:",
+options:["Mendel","Morgan","Darwin","Watson"],
+answer:"Mendel"
+},
 
-{ q:"Longest nerve in human body:",
-options:["Vagus nerve","Sciatic nerve","Optic nerve","Facial nerve"],
-answer:"Sciatic nerve" },
+{
+q:"DNA replication occurs in:",
+options:["S phase","G1 phase","M phase","G2 phase"],
+answer:"S phase"
+},
 
-{ q:"Functional unit of nervous system:",
-options:["Axon","Dendrite","Neuron","Synapse"],
-answer:"Neuron" },
+{
+q:"The genetic material of most viruses is:",
+options:["RNA","DNA","Both","Protein"],
+answer:"RNA"
+},
 
-{ q:"Reflex actions are controlled by:",
-options:["Brain","Spinal cord","Cerebellum","Hypothalamus"],
-answer:"Spinal cord" },
+{
+q:"The codon for start of translation is:",
+options:["UAA","AUG","UGA","UAG"],
+answer:"AUG"
+},
 
-{ q:"The gap between two neurons is called:",
-options:["Synapse","Axon","Node","Junction"],
-answer:"Synapse" },
+{
+q:"Colour blindness is:",
+options:["Autosomal disorder","Sex-linked disorder","Dominant disorder","Polygenic disorder"],
+answer:"Sex-linked disorder"
+},
 
-{ q:"Master gland of endocrine system:",
-options:["Thyroid","Pituitary","Adrenal","Pancreas"],
-answer:"Pituitary" },
+{
+q:"Malaria is caused by:",
+options:["Virus","Bacteria","Protozoa","Fungus"],
+answer:"Protozoa"
+},
 
-{ q:"Insulin is secreted by:",
-options:["Thyroid","Pancreas","Liver","Adrenal gland"],
-answer:"Pancreas" },
+{
+q:"The vector of malaria is:",
+options:["Culex mosquito","Aedes mosquito","Female Anopheles mosquito","Housefly"],
+answer:"Female Anopheles mosquito"
+},
 
-{ q:"Hormone responsible for fight-or-flight response:",
-options:["Thyroxine","Adrenaline","Insulin","Glucagon"],
-answer:"Adrenaline" },
+{
+q:"AIDS is caused by:",
+options:["Bacteria","Virus","Fungus","Protozoa"],
+answer:"Virus"
+},
 
-{ q:"Thyroxine contains which element:",
-options:["Iron","Iodine","Calcium","Phosphorus"],
-answer:"Iodine" },
+{
+q:"Penicillin is produced by:",
+options:["Bacteria","Fungi","Algae","Virus"],
+answer:"Fungi"
+},
 
-{ q:"Basic unit of muscle contraction:",
-options:["Sarcomere","Myosin","Actin","Fiber"],
-answer:"Sarcomere" },
+{
+q:"Biofertilizers contain:",
+options:["Chemical nutrients","Living microorganisms","Hormones","Pesticides"],
+answer:"Living microorganisms"
+}
+,
+{
+q:"The enzyme responsible for DNA synthesis during replication is:",
+options:["RNA polymerase","DNA ligase","DNA polymerase","Helicase"],
+answer:"DNA polymerase"
+},
 
-{ q:"Bones are connected by:",
-options:["Tendons","Ligaments","Muscles","Cartilage"],
-answer:"Ligaments" },
+{
+q:"The approximate number of base pairs in the human genome is:",
+options:["3 million","3 billion","30 million","30 billion"],
+answer:"3 billion"
+},
 
-{ q:"Muscle attached to bone by:",
-options:["Ligament","Tendon","Cartilage","Nerve"],
-answer:"Tendon" },
+{
+q:"Which hormone lowers blood glucose level?",
+options:["Glucagon","Insulin","Adrenaline","Cortisol"],
+answer:"Insulin"
+},
 
-{ q:"Human skeleton has:",
-options:["206 bones","208 bones","210 bones","200 bones"],
-answer:"206 bones" },
-
-{ q:"Light sensitive cells of retina:",
-options:["Rods and cones","Neurons","Axons","Synapses"],
-answer:"Rods and cones" },
-
-{ q:"Vitamin important for vision:",
-options:["Vitamin A","Vitamin B","Vitamin C","Vitamin D"],
-answer:"Vitamin A" },
-
-{ q:"Cochlea is part of:",
-options:["Eye","Ear","Nose","Brain"],
-answer:"Ear" },
-
-{ q:"Plasma protein responsible for immunity:",
-options:["Albumin","Globulin","Fibrinogen","Hemoglobin"],
-answer:"Globulin" },
-
-{ q:"Universal donor blood group:",
+{
+q:"Universal donor blood group is:",
 options:["A","B","AB","O"],
-answer:"O" },
+answer:"O"
+},
 
-{ q:"Universal recipient blood group:",
-options:["A","B","AB","O"],
-answer:"AB" },
+{
+q:"Universal recipient blood group is:",
+options:["O","A","B","AB"],
+answer:"AB"
+},
 
-{ q:"Platelets help in:",
-options:["Oxygen transport","Immunity","Blood clotting","Digestion"],
-answer:"Blood clotting" },
+{
+q:"The normal resting heart rate of an adult human is about:",
+options:["50 beats/min","60 beats/min","72 beats/min","100 beats/min"],
+answer:"72 beats/min"
+},
 
-{ q:"Hormone controlling metabolism:",
-options:["Thyroxine","Insulin","Adrenaline","Cortisol"],
-answer:"Thyroxine" },
+{
+q:"The energy currency of the cell is:",
+options:["NADH","FADH₂","ATP","GTP"],
+answer:"ATP"
+},
 
-{ q:"The diaphragm helps in:",
-options:["Digestion","Respiration","Circulation","Excretion"],
-answer:"Respiration" },
+{
+q:"Which plant hormone promotes cell division?",
+options:["Auxin","Cytokinin","Gibberellin","Abscisic acid"],
+answer:"Cytokinin"
+},
 
-{ q:"Myoglobin is present in:",
-options:["Blood","Muscle","Bone","Nerve"],
-answer:"Muscle" },
+{
+q:"Formation of sperm in males is called:",
+options:["Oogenesis","Gametogenesis","Spermatogenesis","Fertilization"],
+answer:"Spermatogenesis"
+},
 
-{ q:"The functional unit of muscle fiber is:",
-options:["Sarcomere","Myofibril","Actin","Myosin"],
-answer:"Sarcomere" }
+{
+q:"The enzyme that joins Okazaki fragments during DNA replication is:",
+options:["DNA polymerase","DNA ligase","Helicase","Primase"],
+answer:"DNA ligase"
+},
 
+{
+q:"The enzyme responsible for RNA synthesis during transcription is:",
+options:["DNA polymerase","RNA polymerase","Ligase","Topoisomerase"],
+answer:"RNA polymerase"
+},
+
+{
+q:"The hormone that regulates calcium level in blood is:",
+options:["Thyroxine","Parathyroid hormone","Insulin","Cortisol"],
+answer:"Parathyroid hormone"
+},
+
+{
+q:"Maximum ATP during cellular respiration is produced in:",
+options:["Glycolysis","Krebs cycle","Electron transport chain","Fermentation"],
+answer:"Electron transport chain"
+},
+
+{ 
+q:"The organelle known as the suicide bags of the cell is:",
+options:["Mitochondria","Lysosome","Golgi apparatus","Ribosome"],
+answer:"Lysosome"
+},
+
+{
+q:"Diabetes mellitus is caused by deficiency of:",
+options:["Thyroxine","Insulin","Glucagon","Adrenaline"],
+answer:"Insulin"
+},
+
+{
+q:"Chromosomes align at the equatorial plate during:",
+options:["Prophase","Metaphase","Anaphase","Telophase"],
+answer:"Metaphase"
+},
+
+{
+q:"The RNA molecule that carries amino acids to ribosome is:",
+options:["mRNA","rRNA","tRNA","snRNA"],
+answer:"tRNA"
+},
+
+{
+q:"The genetic code is:",
+options:["Non-degenerate","Degenerate","Non-universal","Overlapping"],
+answer:"Degenerate"
+},
+
+{
+q:"The first antibiotic discovered was:",
+options:["Streptomycin","Penicillin","Tetracycline","Chloramphenicol"],
+answer:"Penicillin"
+},
+
+{
+q:"The concept of survival of the fittest was given by:",
+options:["Mendel","Darwin","Lamarck","Morgan"],
+answer:"Darwin"
+}
 ]
-
 
 let current = 0
 let score = 0
-let time = 10
+let time = 20
 let timer
 
 function startQuiz(){
 
 document.getElementById("welcomeScreen").style.display="none"
-
 document.getElementById("quizBox").style.display="block"
-
+createNavPanel()
 loadQuestion()
 
 }
@@ -374,103 +556,142 @@ function loadQuestion(){
 
 let q = questions[current]
 
-let progress = ((current+1)/questions.length)*100
-document.getElementById("progressBar").style.width = progress + "%"
+document.getElementById("questionNumber").innerHTML =
+"Question " + (current+1) + " / " + questions.length
+
+document.getElementById("progressBar").style.width =
+((current+1)/questions.length)*100 + "%"
 
 document.getElementById("question").innerHTML = q.q
 
 let optionsHTML=""
 
-q.options.forEach(option => {
-
+q.options.forEach(option=>{
 optionsHTML += `<button onclick="checkAnswer('${option}')">${option}</button>`
-
 })
 
 document.getElementById("options").innerHTML = optionsHTML
 
 clearInterval(timer)
 startTimer()
+updateNavPanel()
 
 }
+let wrongMessages = [
+"Keep going ❤️",
+"I believe in you!",
+"You can do it 💪",
+"Almost there!",
+"Don't give up 🌟"
+]
 
+let loveMessages = [
+"Proud of you ❤️",
+"You are amazing 😘",
+"My future doctor 👩‍⚕️",
+"You make me proud 💖",
+"You're doing great!"
+]
 function checkAnswer(answer){
 
 let correct = questions[current].answer
 
-if(answer === correct){
+if(answer===correct){
 
 score++
+if(score % 5 === 0){
+
+let loveMsg = loveMessages[Math.floor(Math.random()*loveMessages.length)]
 
 document.getElementById("result").innerHTML =
-"Correct 😘❤️ Proud of you!"
-
-for(let i=0;i<10;i++){
-createHeart()
-}
+"Correct 😘❤️<br>" + loveMsg
 
 }
-else{
+document.getElementById("result").innerHTML="Correct 😘❤️ Proud of you!"
+
+let s=document.getElementById("correctSound")
+s.currentTime=0
+s.play()
+
+for(let i=0;i<10;i++){createHeart()}
+
+}else{
+
+let randomMsg = wrongMessages[Math.floor(Math.random()*wrongMessages.length)]
 
 document.getElementById("result").innerHTML =
-"Wrong ❌ Correct answer is: " + correct
+"Wrong ❌ Correct answer is: " + correct + "<br>" + randomMsg
+}
+
+document.getElementById("score").innerHTML="Score: "+score+" ❤️"
+
+document.querySelectorAll("#options button").forEach(b=>b.disabled=true)
+
+setTimeout(nextQuestion,1500)
 
 }
 
-document.getElementById("score").innerHTML =
-"Score: "+score+" ❤️"
-
-let buttons = document.querySelectorAll("#options button")
-buttons.forEach(btn => btn.disabled = true)
-
+function nextQuestion(){
+document.querySelectorAll(".navBtn")[current].classList.add("answered")
 current++
-
-setTimeout(function(){
-
-document.getElementById("result").innerHTML=""
 
 if(current < questions.length){
 
 loadQuestion()
 
+}else{
+
+showFinal()
+
 }
-else{
+
+}
+
+function showFinal(){
 
 document.getElementById("quizBox").style.display="none"
-
 document.getElementById("finalScreen").style.display="block"
 
 document.getElementById("finalMessage").innerHTML =
 "Your score is "+score+" ❤️ out of "+questions.length
 
-for(let i=0;i<30;i++){
-createHeart()
-}
+if(score>=55){
+
+document.getElementById("giftBox").innerHTML="🎁"
+document.getElementById("giftMessage").innerHTML="🎉 Gift unlocked!"
+
+let g=document.getElementById("giftSound")
+g.currentTime=0
+g.play()
+
+for(let i=0;i<80;i++){createConfetti()}
+for(let i=0;i<40;i++){createHeart()}
+
+}else{
+
+document.getElementById("giftMessage").innerHTML="🔒 Score 55 to unlock your gift ❤️"
 
 }
-
-},2000)
 
 }
 
 function startTimer(){
 
-time = 10
+time=20
 
-timer = setInterval(function(){
+timer=setInterval(()=>{
 
-document.getElementById("timer").innerHTML =
-"Time: "+time+"s"
+document.getElementById("timer").innerHTML="Time: "+time+"s"
 
 time--
 
-if(time < 0){
+if(time<0){
 
 clearInterval(timer)
 
-current++
+document.getElementById("result").innerHTML="Time up ⏱"
 
-loadQuestion()
+setTimeout(nextQuestion,1000)
 
 }
 
@@ -480,19 +701,64 @@ loadQuestion()
 
 function createHeart(){
 
-let heart = document.createElement("div")
+let heart=document.createElement("div")
 
 heart.classList.add("heart")
 
-heart.innerHTML = "❤️"
+heart.innerHTML="❤️"
 
-heart.style.left = Math.random()*100 + "vw"
+heart.style.left=Math.random()*100+"vw"
 
 document.body.appendChild(heart)
 
-setTimeout(function(){
-heart.remove()
-},3000)
+setTimeout(()=>heart.remove(),3000)
+
+}
+
+function createConfetti(){
+
+let colors=["red","yellow","blue","green","pink","purple"]
+
+let conf=document.createElement("div")
+
+conf.classList.add("confetti")
+
+conf.style.background=colors[Math.floor(Math.random()*colors.length)]
+
+conf.style.left=Math.random()*100+"vw"
+
+document.body.appendChild(conf)
+
+setTimeout(()=>conf.remove(),3000)
+
+}
+function createNavPanel(){
+
+let navHTML=""
+
+for(let i=0;i<questions.length;i++){
+
+navHTML += `<button class="navBtn" onclick="goToQuestion(${i})">${i+1}</button>`
+
+}
+
+document.getElementById("navPanel").innerHTML = navHTML
+
+}
+function goToQuestion(index){
+
+current = index
+
+loadQuestion()
+
+}
+function updateNavPanel(){
+
+let buttons = document.querySelectorAll(".navBtn")
+
+buttons.forEach(btn => btn.classList.remove("current"))
+
+buttons[current].classList.add("current")
 
 }
 
